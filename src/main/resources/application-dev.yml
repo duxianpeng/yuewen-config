@@ -1,0 +1,76 @@
+server:
+  port: ${PORT:1112}
+  context-path: /${spring.application.name}
+security:
+  basic:
+    enabled: false
+management:
+  security:
+    enabled: false
+  cloud:
+    bus:
+      enabled: true
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_URL:localhost}:9092
+          zkNodes: ${KAFKA_URL:localhost}:2181
+    config:
+      server:
+        git:
+          basedir: /tmp/yuewen-config/git/
+          uri: ssh://git@yuewen.com:7999/~xd20319/appconfig.git
+          force-pull: true
+          ignoreLocalSshSettings: true
+          privateKey: |
+                        -----BEGIN RSA PRIVATE KEY-----
+                        MIIEowIBAAKCAQEAtC8ctYJ4yAxUIh+jWlpvgXNlnZQ/cbYuNmHSOuxEM5L1RaS2
+                        2imZ8kW3AZO6XYTYIqRwHtHvq0DT/7smlG463ZMtzV6Nj7BgWdLupe5Pzq3rXfPv
+                        JXkxUsoM8nCduh/ERfu3vHn7jQHNO/kU3X9bAu3tiqyP0lTj0Bd6HJP0n2TqI9Jj
+                        u7BPlRqpHC2FSQw8E9uVbAvLmBRm3k0bwU2oGcYZdFJpR7eILfHkuYK29lEjaU4u
+                        YlR2hNetTVAgbYGFSrArR8B9H+26PvKnHDTC+X02HKIq95JjAwpZ6pJcF1inTNlD
+                        JRzETqPtwXvEzantrD8x6BLC9yIiRuSOzmC0FQIDAQABAoIBADMmHJQ6EWdYeJmn
+                        OYvwmC67P2FYMBpriPrPEgq//yxUz2ORuoZ7wMPRnn3IHeNmTqSm4V0eY1bN9GBo
+                        FC+WiwdTPHFMIgtkGjXldvGLkQQuwt3M3VpZ6PKDgOFhrqSjV+g16JaMWihRFp2r
+                        u4yVFpTiTchL7BfdGT59K6DpL0v/sw1dila6Ss0iyZDhXpZ/3gXSdCh3gbtvLY/7
+                        fJYXLeTsl8oypho/f6rC65NjX7W79yiQzHixvUba6NrmYxiEUh/bXzha5JyEisnV
+                        x1KWuiIuh3DdX8rNfcqbMGKVjEeeFS1e3sxTp8r76blSvZvqJIxc1aeB7iXIHqEI
+                        Y9NKmxECgYEA7mzMBgMNC8rIpo8rcAlgmo1SIkFfgjKcO102LMW17ch7NY3By8Ax
+                        MHXupGGcCGA6dOTZmNQu2Gg4TgxvLFTPstC3rwznNz3wysXoHtCJn5+wpX6Grod5
+                        76GhIx/8m7WWLJEn6Q8qB28LnhZxs/OYgIjbAvb8KlSIx72kF7WpEfMCgYEAwXdH
+                        NaWjvTh+D7XdKD1vWlVEkK8bxXm2WoWIllf0zc0MMApPAFE7PTZojSZu0CWIRqVe
+                        /lWkvMMRF7qkUytAdFow3GRSPejoTeRddvPLG4W2osovSsmhjU3NdZHdfJv2JyHL
+                        fpbuxetElStH1mpySzKsiSaYQJJwyDgF/7cKG9cCgYBXq0WyCDkp1tzE8ewE/E27
+                        Rq+mzObzlux/n5ymBeUJlChJ3uAdrYPoz9R6OTIImmmkReoFGjBHfrsFZ+kRIfZl
+                        R/3irhnu5CXASdk6S2/vc+aeU9HuJv6dMI9xvPdDwheAN7e3KM5JgXmCHbqdcrrm
+                        uGvfwTWj0wWgfIjz9uY+JQKBgAfZcg8wKEOOHjc+9rkiPPlaSkzgfez2Mjrb/h2z
+                        deA/uIXedTQbF581LOrFK2vQigXrwb3p9aQe+fuPfAlP0O6nliHrBBc08u/uGwiv
+                        fYchVramI2MSaTaVeIeTonvizArsaRg6wXdQQ1kWB3UgnoCEjtGFulmsV10YQM4O
+                        PB/DAoGBAJVfMkKOx3LXHOrNGZLZcTODlcH55Xc7fK7Ya5YQBNza9LOGz9pCOC3J
+                        aj0hpcRrHAsBzJvx8YJH+F/3SrYAUZDYI1SF/AvFKOJe61xfomd+Iv4c+8nqSy8Z
+                        x3dq6iX6r8Kd/jSn148pl/2ATd71XOweand/J3aKiubK6l+0hFyX
+                        -----END RSA PRIVATE KEY-----
+encrypt.key: yuewen-config-key
+eureka:
+  instance:
+    hostname: ${HOST_NAME}
+    nonSecurePort: 80
+    instanceId: ${spring.application.name}:${server.port}:${random.value}
+    preferIpAddress: false
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    statusPageUrlPath: ${server.context-path}/info
+    healthCheckUrlPath: ${server.context-path}/health
+    homePageUrlPath: ${server.context-path}
+    metadataMap:
+      configPath: /${spring.application.name}
+      management.context-path: ${server.context-path}
+logging:
+  file: logs/${spring.application.name}.log
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    com.yuewen: DEBUG
